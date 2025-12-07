@@ -1,39 +1,68 @@
-import Link from 'next/link'
-import styles from '../page.module.css'
+"use client";
 
-export default function About() {
+import React, { useState, useEffect } from 'react';
+
+const About = () => {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const provjeriBazu = async () => {
+    setLoading(true);
+    setError('');
+    
+    try {
+      // Sada koristite /baza rutu
+      const response = await fetch('http://localhost:5000/provjera/baza');
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.details || `HTTP error! status: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      setData(result);
+    } catch (err) {
+      setError('Greška: ' + err.message);
+      console.error('Error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    provjeriBazu();
+  }, []);
+
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        <nav className={styles.nav}>
-          <div className={styles.logo}>
-            <Link href="/">
-              <h1>🛍️ Ecommerce</h1>
-            </Link>
-          </div>
-          <ul className={styles.navLinks}>
-            <li><Link href="/">Početna</Link></li>
-            <li><Link href="/products">Proizvodi</Link></li>
-            <li><Link href="/about">O nama</Link></li>
-            <li><Link href="/contact">Kontakt</Link></li>
-          </ul>
-        </nav>
-      </header>
-
-      <main className={styles.main}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '2rem' }}>O nama</h1>
-          <p style={{ fontSize: '1.1rem', color: '#666', lineHeight: '1.8' }}>
-            Dobrodošli u našu trgovinu! Mi smo moderna ecommerce platforma posvećena 
-            pružanju najboljih proizvoda i usluga našim kupcima.
-          </p>
+    <div style={{ padding: '20px' }}>
+      <h2>Provjera baze podataka</h2>
+      
+      <button 
+        onClick={provjeriBazu} 
+        disabled={loading}
+        style={{ marginBottom: '20px', padding: '10px' }}
+      >
+        {loading ? 'Provjeravam...' : 'Provjeri bazu'}
+      </button>
+      
+      {loading && <p>Učitavanje...</p>}
+      
+      {error && (
+        <div style={{ color: 'red' }}>
+          <p><strong>Greška:</strong> {error}</p>
         </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <p>&copy; 2024 Ecommerce. Sva prava pridržana.</p>
-      </footer>
+      )}
+      
+      {data && (
+        <div style={{ color: 'green' }}>
+          <p><strong>Status:</strong> {data.status}</p>
+          <p><strong>Verzija baze:</strong> {data.version}</p>
+          <p><strong>Poruka:</strong> {data.message}</p>
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
+export default About;

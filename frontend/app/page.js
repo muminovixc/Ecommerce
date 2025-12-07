@@ -10,26 +10,21 @@ export default function Home() {
             <h1>🛍️ Ecommerce</h1>
           </div>
           <ul className={styles.navLinks}>
-            <li><Link href="/">Početna</Link></li>
-            <li><Link href="/products">Proizvodi</Link></li>
-            <li><Link href="/about">O nama</Link></li>
-            <li><Link href="/contact">Kontakt</Link></li>
+            <li><Link href="/login">Login</Link></li>
+           
           </ul>
         </nav>
       </header>
 
       <main className={styles.main}>
         <section className={styles.hero}>
-          <h1 className={styles.heroTitle}>Dobrodošli u našu trgovinu</h1>
+          <h1 className={styles.heroTitle}>Dobrodošli u najvecu webtrgovinu knjiga</h1>
           <p className={styles.heroSubtitle}>
             Pronađite najbolje proizvode po najboljim cijenama
           </p>
           <div className={styles.heroButtons}>
-            <Link href="/products" className={styles.primaryButton}>
+            <Link href="/login" className={styles.primaryButton}>
               Pregledaj proizvode
-            </Link>
-            <Link href="/about" className={styles.secondaryButton}>
-              Saznaj više
             </Link>
           </div>
         </section>
